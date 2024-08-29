@@ -659,11 +659,7 @@ async function submitForm() {
 
     const name = document.getElementById('name').value;
 
-    // Get IP address from an external service (replace with actual implementation)
-    const ip = await fetch('https://api.ipify.org?format=json')
-        .then(response => response.json())
-        .then(data => data.ip)
-        .catch(() => 'IP Not Available');
+    
 
     // Detect network type, with better handling for Wi-Fi
     const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
